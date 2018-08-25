@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Features>Flow-Analysis</Features>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Buildalyzer" Version="1.0.0" />
+    <PackageReference Include="Buildalyzer.Workspaces" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis">
+      <Version>2.11.0-beta1-63211-02</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+      <Version>2.9.0-beta1-63118-01</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>
