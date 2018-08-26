@@ -35,7 +35,8 @@ Etc.
 
 ## Technologies / Modules
 
-Todo
+- Roslyn
+- C#
 
 ## Systeme de correction
 
@@ -66,12 +67,15 @@ La F-Measure semble intéressante, c'est une valeur qui va de 0 pour une classif
 
 On peut faire une mesure globale sur tous les erreurs reportés ou nous pouvons donner des poids aux catégories et controler le résultat pour que les analyses difficiles aillent plus de valeurs
 
+Edit: https://www.owasp.org/index.php/Benchmark
+Je suis allé avec le systeme de point du OWASP benchmark
+
 
 ## ToDo List
 
 - [ ] Faire un énoncé
-- [ ] Choisir le langage analysé et l'engin de base
-- [ ] Coder le squelette de la compé
-- [ ] Coder le correcteur automatisé
+- [X] Choisir le langage analysé et l'engin de base
+- [X] Coder le squelette de la compé
+- [X] Coder le correcteur automatisé
 - [ ] Tester
 - [ ] Compléter la ToDo List
