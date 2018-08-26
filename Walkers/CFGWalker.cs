@@ -6,20 +6,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.CodeAnalysis.Operations;
 
-namespace Compiler
+namespace Compiler.Walkers
 {
     internal class CFGWalker : CSharpSyntaxWalker
     {
-        private readonly SemanticModel model;
-
-        public CFGWalker(SemanticModel model)
-        {
-            this.model = model;
-        }
-
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            var operation = (IMethodBodyOperation)model.GetOperation(node);
+            var operation = (IMethodBodyOperation)Program.Instance.Model.GetOperation(node);
             string methodName = node.Identifier.ToString();
             Console.WriteLine(methodName);
             

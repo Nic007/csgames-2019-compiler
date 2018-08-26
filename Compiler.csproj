@@ -12,6 +12,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <Version>2.9.0-beta1-63118-01</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 </Project>
