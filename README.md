@@ -70,6 +70,15 @@ On peut faire une mesure globale sur tous les erreurs reportés ou nous pouvons 
 Edit: https://www.owasp.org/index.php/Benchmark
 Je suis allé avec le systeme de point du OWASP benchmark
 
+## Description sur le site web
+Analyse statique
+
+Un compilateur est une boîte noire sacrée qui peut tout faire pour nous. Il traduit votre magnifique "code" en binaires, il optimise vos problèmes NP complets en O(1), il comprend la différence entre l'opérateur == et === de Javascript et vous fait même le café. Si vous vous pensez capable d'apprivoiser cette bête à coups de visites dans des AST et CFG, cette compétition d'analyse statique est pour vous.
+
+A compilator is a holy black box that can do everything for us. It translates your magnificient "code" into binaries, it optimizes your NP-complex problems into a O(1) solution, it can understand the difference between the operators == and === of Javascript and it can even make coffee for you. If you think you can tame this beast by visiting AST and CFG, this competition is for you.
+
+Languages requis: C#
+
 
 ## ToDo List
 
