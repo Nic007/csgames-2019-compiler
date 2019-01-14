@@ -28,27 +28,29 @@ namespace Compiler
         
         static void Main() 
         {
-            var projectPath = @"Compiler.csproj";
+            var solutionFilePath = @"D:\Developpement\eShopOnWeb\eShopOnWeb.sln";
+            //var solutionFilePath = @"D:\Developpement\csgames-2019-competitions\Compiler\Compiler.sln";
 
-            var manager = new AnalyzerManager();
-            manager.SetGlobalProperty("features", "Flow-Analysis");
-            var analyzer = manager.GetProject(projectPath);
-            var workspace = analyzer.GetWorkspace();
-            var project = workspace.CurrentSolution.Projects.First(x => x.FilePath.Contains(projectPath));
+            Console.WriteLine("Parsing solution...");
+            var manager = new AnalyzerManager(solutionFilePath);
+            var workspace = manager.GetWorkspace();
+            var projects = workspace.CurrentSolution.Projects;
 
-            Helper.AnalyzeWalker(project, new ExpectedIssueWalkers());
+            Console.WriteLine("Parsing source code for expected issues and traps...");
+            Helper.AnalyzeWalker(projects, new ExpectedIssueWalker());
             IssueReporter.Instance.EndExpectMode();
 
+            Console.WriteLine("Analyzing source code...");
             var walkersNames = Assembly.GetExecutingAssembly().GetTypes()
               .Where(t => String.Equals(t.Namespace, "Compiler.IssueWalkers", StringComparison.Ordinal));
 
-            var walkers = walkersNames.Select(x => Activator.CreateInstance(x) as CSharpSyntaxWalker);
-            Helper.AnalyzeWalkers(project, walkers);
+            var walkers = walkersNames.Select(x => Activator.CreateInstance(x)).OfType<DefaultWalker>();
+            Helper.AnalyzeWalkers(projects, walkers);
 
+            // And reporting results
             var sw = new StreamWriter(Console.OpenStandardOutput());
             sw.AutoFlush = true;
             Console.SetOut(sw);
-
 
             IssueReporter.Instance.Report(sw);
         }

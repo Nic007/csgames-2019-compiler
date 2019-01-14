@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -61,80 +62,82 @@ internal sealed class IssueReporter
 
     public void Report(StreamWriter writer)
     {
-
-        var expectedIssues = ExpectedIssues.Keys.ToImmutableHashSet();
-        var expectedTraps  = ExpectedTraps.Keys.ToImmutableHashSet();
-        var reportedIssues = ReportedIssues.Keys.ToImmutableHashSet();
-
-        var truePositives  = reportedIssues.Intersect(expectedIssues);
-        var falsePositives = reportedIssues.Intersect(expectedTraps);
-        var trueNegatives  = expectedTraps.Except(reportedIssues);
-        var falseNegatives = expectedIssues.Except(reportedIssues);
-
-        var TP = truePositives.Count;
-        var FP = falsePositives.Count;
-        var TN = trueNegatives.Count;
-        var FN = falseNegatives.Count;
-
-        var TPR = ((float)TP) / ( TP + FN );
-        var FPR = ((float)FP) / ( FP + TN );
-
-        var score = (TPR - FPR) * 100;
-
-        writer.WriteLine("Reporting Results:");
-        writer.WriteLine("");
-
-        writer.WriteLine("Reported issues:");
-        foreach (var issue in reportedIssues)
+        foreach (IssueType issueType in (IssueType[]) Enum.GetValues(typeof(IssueType)))
         {
-            writer.WriteLine(issue.ToFullString());
+            var expectedIssues = ExpectedIssues.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
+            var expectedTraps  = ExpectedTraps.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
+            var reportedIssues = ReportedIssues.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
+
+            var truePositives  = reportedIssues.Intersect(expectedIssues);
+            var falsePositives = reportedIssues.Except(expectedIssues);
+            var trueNegatives  = expectedTraps.Except(reportedIssues);
+            var falseNegatives = expectedIssues.Except(reportedIssues);
+
+            var TP = truePositives.Count;
+            var FP = falsePositives.Count;
+            var TN = trueNegatives.Count;
+            var FN = falseNegatives.Count;
+
+            var TPR = ((float)TP) / ( TP + FN );
+            var FPR = ((float)FP) / ( FP + TN );
+
+            var score = (TPR - FPR) * 100;
+
+            writer.WriteLine("\nReporting Results for issue: " + issueType);
+            writer.WriteLine("");
+
+            writer.WriteLine("Reported issues:");
+            foreach (var issue in reportedIssues)
+            {
+                writer.WriteLine(issue.ToFullString());
+            }
+            writer.WriteLine("");
+
+            writer.WriteLine("Expected issues:");
+            foreach (var issue in expectedIssues)
+            {
+                writer.WriteLine(issue.ToFullString());
+            }
+            writer.WriteLine("");
+
+            writer.WriteLine("Expected traps:");
+            foreach (var issue in expectedTraps)
+            {
+                writer.WriteLine(issue.ToFullString());
+            }
+            writer.WriteLine("");
+
+            writer.WriteLine("False positives:");
+            foreach (var issue in falsePositives)
+            {
+                writer.WriteLine(issue.ToFullString());
+            }
+            writer.WriteLine("");
+
+            writer.WriteLine("False negatives:");
+            foreach (var issue in falseNegatives)
+            {
+                writer.WriteLine(issue.ToFullString());
+            }
+            writer.WriteLine("");
+
+            writer.WriteLine("Expected Issues Count: {0}", expectedIssues.Count);
+            writer.WriteLine("Expected Traps Count: {0}", expectedTraps.Count);
+            writer.WriteLine("Reported Issues Count: {0}", reportedIssues.Count);
+            writer.WriteLine("");
+
+            writer.WriteLine("True Positives Count: {0}", TP);
+            writer.WriteLine("False Positives Count: {0}", FP);
+            writer.WriteLine("True Negatives Count: {0}", TN);
+            writer.WriteLine("False Negatives Count: {0}", FN);
+            writer.WriteLine("");
+
+            writer.WriteLine("True Positive Rate: {0}", TPR);
+            writer.WriteLine("False Positive Rate: {0}", FPR);
+            writer.WriteLine("");
+
+            writer.WriteLine("Final Score: {0}", score);
         }
-        writer.WriteLine("");
-
-        writer.WriteLine("Expected issues:");
-        foreach (var issue in expectedIssues)
-        {
-            writer.WriteLine(issue.ToFullString());
-        }
-        writer.WriteLine("");
-
-        writer.WriteLine("Expected traps:");
-        foreach (var issue in expectedTraps)
-        {
-            writer.WriteLine(issue.ToFullString());
-        }
-        writer.WriteLine("");
-
-        writer.WriteLine("False positives:");
-        foreach (var issue in falsePositives)
-        {
-            writer.WriteLine(issue.ToFullString());
-        }
-        writer.WriteLine("");
-
-        writer.WriteLine("False negatives:");
-        foreach (var issue in falseNegatives)
-        {
-            writer.WriteLine(issue.ToFullString());
-        }
-        writer.WriteLine("");
-
-        writer.WriteLine("Expected Issues Count: {0}", expectedIssues.Count);
-        writer.WriteLine("Expected Traps Count: {0}", expectedTraps.Count);
-        writer.WriteLine("Reported Issues Count: {0}", reportedIssues.Count);
-        writer.WriteLine("");
-
-        writer.WriteLine("True Positives Count: {0}", TP);
-        writer.WriteLine("False Positives Count: {0}", FP);
-        writer.WriteLine("True Negatives Count: {0}", TN);
-        writer.WriteLine("False Negatives Count: {0}", FN);
-        writer.WriteLine("");
-
-        writer.WriteLine("True Positive Rate: {0}", TPR);
-        writer.WriteLine("False Positive Rate: {0}", FPR);
-        writer.WriteLine("");
-
-        writer.WriteLine("Finale Score: {0}", score);
     }
 
 }

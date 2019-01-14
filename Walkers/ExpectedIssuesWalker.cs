@@ -9,12 +9,13 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace Compiler.Walkers
 {
-    internal sealed class ExpectedIssueWalkers : CSharpSyntaxWalker
+    internal sealed class ExpectedIssueWalker : DefaultWalker
     {
-        private Regex defectRegex = new Regex("^// @issue - [a-zA-Z]* - .*$");
-        private Regex trapRegex = new Regex("^// @trap - [a-zA-Z]* - .*$");
+        private Regex defectRegex = new Regex(@"\@issue\@I(\d+)");
+        private Regex trapRegex = new Regex(@"\@trap\@I(\d+)");
 
-        public ExpectedIssueWalkers() : base(SyntaxWalkerDepth.Trivia)
+
+        public ExpectedIssueWalker() : base(SyntaxWalkerDepth.Trivia)
         {
         }
 
@@ -23,23 +24,19 @@ namespace Compiler.Walkers
             if(trivia.Kind() == SyntaxKind.SingleLineCommentTrivia)
             {
                 var defectComment = trivia.ToString();
-                var match = defectRegex.Match(defectComment);
-                if(match.Success) {
-                    var issueType = defectComment.Split(" - ")[1];
-                    var additionnalMisc = defectComment.Split(" - ")[2];
+                foreach (Match match in defectRegex.Matches(defectComment)) {
+                    var issueType = (IssueType) int.Parse(match.Groups[1].Value);
                     var position = Helper.ExtractPosition(trivia);
 
-                    var expectedIssue = new Issue(issueType, additionnalMisc, position.filepath, position.lineNumber);
+                    var expectedIssue = new Issue(issueType, position.filepath, position.lineNumber);
                     IssueReporter.Instance.AddExpectedIssue(expectedIssue);
                 }
 
-                match = trapRegex.Match(defectComment);
-                if(match.Success) {
-                    var issueType = defectComment.Split(" - ")[1];
-                    var additionnalMisc = defectComment.Split(" - ")[2];
+                foreach (Match match in trapRegex.Matches(defectComment)) {
+                    var issueType = (IssueType) int.Parse(match.Groups[1].Value);
                     var position = Helper.ExtractPosition(trivia);
 
-                    var expectedTrap = new Issue(issueType, additionnalMisc, position.filepath, position.lineNumber, false);
+                    var expectedTrap = new Issue(issueType, position.filepath, position.lineNumber, false);
                     IssueReporter.Instance.AddExpectedIssue(expectedTrap);
                 }
             }

@@ -2,18 +2,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Features>Flow-Analysis</Features>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Buildalyzer" Version="1.0.0" />
-    <PackageReference Include="Buildalyzer.Workspaces" Version="1.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>2.11.0-beta1-63211-02</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>2.9.0-beta1-63118-01</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Buildalyzer" Version="2.1.0" />
+    <PackageReference Include="Buildalyzer.Workspaces" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.11.0-beta1-63402-01-e98144cd" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2-beta4.18474.3" />
   </ItemGroup>
 </Project>
