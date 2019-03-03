@@ -33,3 +33,5 @@ Certains problèmes peuvent être simple et requérir une simple visite de l'AST
 * Pour tester plus rapidement, il vous est conseillé de créer un plus petit projet à analyser.
 
 * Évitez de modifier les classes en dehors du dossier IssueWalker, des modifications seront tolérées si elles sont pertinentes, mais refusées si elles tentent de manipuler le pointage.
+
+* Le compiler que l'on utilise comme base pour le projet est mieux connu sous le nom de "Roslyn"
