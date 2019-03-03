@@ -1,3 +1,6 @@
+// Be careful with this file, you might want to add new functions here,
+// but changing existing functions might break things.
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
