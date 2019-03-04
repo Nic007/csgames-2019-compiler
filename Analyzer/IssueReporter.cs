@@ -28,9 +28,9 @@ internal sealed class IssueReporter
     private IssueReporter()
     {
         DifficultyMultiplier[IssueType.PropertyStartUppercase] = 1;
-        DifficultyMultiplier[IssueType.TestCoverageMissing] = 5;
-        DifficultyMultiplier[IssueType.UnusedFieldsOrLocalVariables] = 2;
-        DifficultyMultiplier[IssueType.NonStaticMethodsAndPropertiesNotAccessingInstanceData] = 2;
+        DifficultyMultiplier[IssueType.TestCoverageMissing] = 10;
+        DifficultyMultiplier[IssueType.UnusedFieldsOrLocalVariables] = 5;
+        DifficultyMultiplier[IssueType.NonStaticMethodsAndPropertiesNotAccessingInstanceData] = 3;
         DifficultyMultiplier[IssueType.FunctionTooBig] = 1;
         DifficultyMultiplier[IssueType.CommentedCode] = 2;
 
