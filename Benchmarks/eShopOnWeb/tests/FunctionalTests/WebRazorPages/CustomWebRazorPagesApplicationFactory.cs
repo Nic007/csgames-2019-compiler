@@ -13,7 +13,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
     public class CustomWebRazorPagesApplicationFactory<TStartup>
     : WebApplicationFactory<Startup>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        protected override void ConfigureWebHost(IWebHostBuilder builder) // @issue@I05
         {
             builder.ConfigureServices(services =>
             {

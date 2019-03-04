@@ -34,7 +34,7 @@ namespace Microsoft.eShopWeb.Web
             ConfigureInMemoryDatabases(services); // @issue@I02
 
             // use real database
-            // ConfigureProductionServices(services);
+            // ConfigureProductionServices(services);  // @issue@I06
         }
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
@@ -65,7 +65,7 @@ namespace Microsoft.eShopWeb.Web
             ConfigureServices(services); // @issue@I02
         }
 
-        public void ConfigureServices(IServiceCollection services) // @issue@I02
+        public void ConfigureServices(IServiceCollection services) // @issue@I02 // @issue@I05
         {
             services.AddIdentity<ApplicationUser, IdentityRole>() // @issue@I02
                 .AddEntityFrameworkStores<AppIdentityDbContext>() // @issue@I02

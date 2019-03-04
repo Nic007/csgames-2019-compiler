@@ -13,7 +13,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
     public class CustomWebApplicationFactory<TStartup>
     : WebApplicationFactory<Startup>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        protected override void ConfigureWebHost(IWebHostBuilder builder) // @issue@I05
         {
             builder.ConfigureServices(services =>
             {
@@ -40,7 +40,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
                 var sp = services.BuildServiceProvider();
 
                 // Create a scope to obtain a reference to the database
-                // context (ApplicationDbContext).
+                // context (ApplicationDbContext). // @trap@I06
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;

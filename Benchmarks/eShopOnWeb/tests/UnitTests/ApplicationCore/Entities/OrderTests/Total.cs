@@ -30,7 +30,7 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Entities.OrderTests
         }
 
         [Fact]
-        public void IsCorrectGiven3Items()
+        public void IsCorrectGiven3Items() // @trap@I04
         {
             var builder = new OrderBuilder();
             var order = builder.WithDefaultValues();

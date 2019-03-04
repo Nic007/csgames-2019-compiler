@@ -34,7 +34,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         // GET: /Account/SignIn 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> SignIn(string returnUrl = null) // @issue@I02
+        public async Task<IActionResult> SignIn(string returnUrl = null) // @issue@I02 // @issue@I04
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme); // @issue@I02
 
@@ -52,7 +52,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn(LoginViewModel model, string returnUrl = null) // @issue@I02
+        public async Task<IActionResult> SignIn(LoginViewModel model, string returnUrl = null) // @issue@I02 // @trap@I05
         {
             if (!ModelState.IsValid) // @issue@I02
             {
@@ -100,7 +100,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null) // @issue@I02
+        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null) // @issue@I02 // @issue@I05
         {
             if (!ModelState.IsValid) // @issue@I02
             {
@@ -153,7 +153,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Register() // @issue@I02
+        public IActionResult Register() // @issue@I02 // @issue@I04
         {
             return View(); // @issue@I02
         }
@@ -197,7 +197,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null) // @issue@I02
+        public IActionResult ResetPassword(string code = null) // @issue@I02 // @issue@I04
         {
             if (code == null) // @issue@I02
             {
@@ -207,7 +207,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
             return View(model); // @issue@I02
         }
 
-        private IActionResult RedirectToLocal(string returnUrl) // @issue@I02
+        private IActionResult RedirectToLocal(string returnUrl) // @issue@I02 // @issue@I04
         {
             if (Url.IsLocalUrl(returnUrl)) // @issue@I02
             {

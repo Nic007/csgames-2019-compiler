@@ -16,7 +16,7 @@ namespace Microsoft.eShopWeb.Web.Services
         private static readonly string _itemsKeyTemplate = "items-{0}-{1}-{2}-{3}"; // @issue@I02
         private static readonly TimeSpan _defaultCacheDuration = TimeSpan.FromSeconds(30); // @issue@I02
 
-        public int test { get; } // @issue@I02
+        public int test { get; } // @issue@I01 // @issue@I02
 
         public CachedCatalogService(IMemoryCache cache, // @issue@I02
             CatalogService catalogService)

@@ -15,7 +15,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(int? brandFilterApplied, int? typesFilterApplied, int? page) // @issue@I02
         {
-            var itemsPage = 10; // @issue@I02
+            var itemsPage = 10; // @issue@I02 // @issue@I03
             var catalogModel = await _catalogService.GetCatalogItems(page ?? 0, itemsPage, brandFilterApplied, typesFilterApplied); // @issue@I02
             return View(catalogModel); // @issue@I02
         }

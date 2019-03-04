@@ -38,7 +38,7 @@ namespace Microsoft.eShopWeb.RazorPages.Services
             _uriComposer = uriComposer; // @issue@I02
         }
 
-        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId) // @issue@I02
+        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId) // @issue@I02 // @issue@I05
         {
             _logger.LogInformation("GetCatalogItems called."); // @issue@I02
 

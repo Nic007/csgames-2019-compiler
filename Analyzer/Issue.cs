@@ -7,7 +7,10 @@ using Microsoft.CodeAnalysis;
 internal enum IssueType {
     PropertyStartUppercase = 1,
     TestCoverageMissing,
-    NeverUserField
+    UnusedFieldsOrLocalVariables,
+    NonStaticMethodsAndPropertiesNotAccessingInstanceData,
+    FunctionTooBig,
+    CommentedCode,
 };
 
 internal sealed class Issue

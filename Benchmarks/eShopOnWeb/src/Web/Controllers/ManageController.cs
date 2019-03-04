@@ -66,7 +66,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IndexViewModel model) // @issue@I02
+        public async Task<IActionResult> Index(IndexViewModel model) // @issue@I02 // @issue@I05
         {
             if (!ModelState.IsValid) // @issue@I02
             {
@@ -148,7 +148,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model) // @issue@I02
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model) // @issue@I02 // @trap@I05
         {
             if (!ModelState.IsValid) // @issue@I02
             {
@@ -387,7 +387,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model) // @issue@I02
+        public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model) // @issue@I02 // @trap@I05
         {
             if (!ModelState.IsValid) // @issue@I02
             {
@@ -418,7 +418,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ResetAuthenticatorWarning() // @issue@I02
+        public IActionResult ResetAuthenticatorWarning() // @issue@I02 // @issue@I04
         {
             return View(nameof(ResetAuthenticator)); // @issue@I02
         }
@@ -462,7 +462,7 @@ namespace Microsoft.eShopWeb.Web.Controllers
             return View(model); // @issue@I02
         }
 
-        private void AddErrors(IdentityResult result) // @issue@I02
+        private void AddErrors(IdentityResult result) // @issue@I02 // @issue@I04
         {
             foreach (var error in result.Errors) // @issue@I02
             {

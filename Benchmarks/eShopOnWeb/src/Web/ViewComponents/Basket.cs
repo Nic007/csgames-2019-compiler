@@ -12,6 +12,8 @@ namespace Microsoft.eShopWeb.Web.ViewComponents
 {
     public class Basket : ViewComponent
     {
+        public string PropertyThatShouldBeStatic => "What Am I doing"; // @issue@I02 // @issue@I04
+
         private readonly IBasketViewModelService _basketService; // @issue@I02
         private readonly SignInManager<ApplicationUser> _signInManager; // @issue@I02
 
@@ -40,7 +42,7 @@ namespace Microsoft.eShopWeb.Web.ViewComponents
             return await _basketService.GetOrCreateBasketForUser(anonymousId); // @issue@I02
         }
 
-        private string GetBasketIdFromCookie() // @issue@I02
+        private string GetBasketIdFromCookie() // @issue@I02 // @issue@I04
         {
             if (Request.Cookies.ContainsKey(Constants.BASKET_COOKIENAME)) // @issue@I02
             {

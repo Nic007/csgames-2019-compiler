@@ -4,7 +4,7 @@ namespace Microsoft.AspNetCore.Mvc
 {
     public static class UrlHelperExtensions
     {
-        public static string EmailConfirmationLink(this IUrlHelper urlHelper, string userId, string code, string scheme) // @issue@I02
+        public static string EmailConfirmationLink(this IUrlHelper urlHelper, string userId, string code, string scheme) // @issue@I02  // @trap@I04
         {
             return urlHelper.Action( // @issue@I02
                 action: nameof(AccountController.ConfirmEmail),

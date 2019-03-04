@@ -26,7 +26,7 @@ namespace Microsoft.eShopWeb.RazorPages
             Configuration = configuration; // @issue@I02
         }
 
-        public IConfiguration Configuration { get; } // @issue@I02
+        public IConfiguration Configuration { get; } // @issue@I02 // @trap@I03
 
         public void ConfigureDevelopmentServices(IServiceCollection services) // @issue@I02
         {
@@ -34,12 +34,12 @@ namespace Microsoft.eShopWeb.RazorPages
             ConfigureTestingServices(services); // @issue@I02
 
             // use real database
-            // ConfigureProductionServices(services);
+            // ConfigureProductionServices(services); // @issue@I06
 
         }
         public void ConfigureTestingServices(IServiceCollection services) // @issue@I02
         {
-            // use in-memory database
+            // use in-memory database(this is not really a parameter) // @trap@I06
             services.AddDbContext<CatalogContext>(c => // @issue@I02
                 c.UseInMemoryDatabase("Catalog")); // @issue@I02
 
@@ -63,7 +63,7 @@ namespace Microsoft.eShopWeb.RazorPages
                 }
                 catch (System.Exception ex)
                 {
-                    var message = ex.Message; // @issue@I02
+                    var message = ex.Message; // @issue@I02 // @issue@I03
                 }
             });
 
@@ -74,7 +74,7 @@ namespace Microsoft.eShopWeb.RazorPages
             ConfigureServices(services); // @issue@I02
         }
 
-        public void ConfigureServices(IServiceCollection services) // @issue@I02
+        public void ConfigureServices(IServiceCollection services) // @issue@I02 // @issue@I05
         {
             services.AddIdentity<ApplicationUser, IdentityRole>() // @issue@I02
                 .AddEntityFrameworkStores<AppIdentityDbContext>() // @issue@I02

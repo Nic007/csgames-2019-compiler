@@ -13,7 +13,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         {
         }
 
-        public DbSet<Basket> Baskets { get; set; }// @issue@I02
+        public DbSet<Basket> Baskets { get; set; } // @issue@I02
         public DbSet<CatalogItem> catalogItems { get; set; } // @issue@I01 @issue@I02
         public DbSet<CatalogBrand> CatalogBrands { get; set; } // @issue@I02
         public DbSet<CatalogType> CatalogTypes { get; set; } // @issue@I02

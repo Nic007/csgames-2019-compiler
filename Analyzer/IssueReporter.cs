@@ -15,13 +15,37 @@ internal sealed class IssueReporter
     public static IssueReporter Instance { get { return lazy.Value; } }
 
     private bool expectMode = true;
+    private bool shortScore = false;
 
+    private ConcurrentDictionary<IssueType, bool> EnabledIssueTypes = new ConcurrentDictionary<IssueType, bool>();
+    private ConcurrentDictionary<IssueType, int> DifficultyMultiplier = new ConcurrentDictionary<IssueType, int>();
     private ConcurrentDictionary<Issue, bool> ExpectedIssues = new ConcurrentDictionary<Issue, bool>();
     private ConcurrentDictionary<Issue, bool> ExpectedTraps = new ConcurrentDictionary<Issue, bool>();
     private ConcurrentDictionary<Issue, bool> ReportedIssues = new ConcurrentDictionary<Issue, bool>();
 
+    private float maxScore = 0.0f;
+
     private IssueReporter()
     {
+        DifficultyMultiplier[IssueType.PropertyStartUppercase] = 1;
+        DifficultyMultiplier[IssueType.TestCoverageMissing] = 5;
+        DifficultyMultiplier[IssueType.UnusedFieldsOrLocalVariables] = 2;
+        DifficultyMultiplier[IssueType.NonStaticMethodsAndPropertiesNotAccessingInstanceData] = 2;
+        DifficultyMultiplier[IssueType.FunctionTooBig] = 1;
+        DifficultyMultiplier[IssueType.CommentedCode] = 2;
+
+        foreach (IssueType issueType in (IssueType[]) Enum.GetValues(typeof(IssueType)))
+        {
+            EnabledIssueTypes[issueType] = false;
+            maxScore += DifficultyMultiplier[issueType];
+        }
+
+        maxScore *= 100;
+    }
+
+    public void EnableIssueType(IssueType issueType)
+    {
+        EnabledIssueTypes[issueType] = true;
     }
 
     public void AddExpectedIssue(Issue issue)
@@ -61,11 +85,29 @@ internal sealed class IssueReporter
     {
         expectMode = false;
     }
-
+Random random = new Random();
     public void Report(StreamWriter writer)
     {
+        var nbEnabled = 0;
         foreach (IssueType issueType in (IssueType[]) Enum.GetValues(typeof(IssueType)))
         {
+            if (EnabledIssueTypes[issueType])
+                nbEnabled++;
+        }
+
+        if (nbEnabled == 0) 
+        {
+            writer.WriteLine("\nWARNING: You didn't call IssueReporter.Instance.EnableIssueType(...) in your own Walker... Nothing to evaluate");
+            return;
+        }
+
+        var scores = new Dictionary<IssueType, float>();
+
+        foreach (IssueType issueType in (IssueType[]) Enum.GetValues(typeof(IssueType)))
+        {
+            if (!EnabledIssueTypes[issueType]) 
+                continue;
+
             var expectedIssues = ExpectedIssues.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
             var expectedTraps  = ExpectedTraps.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
             var reportedIssues = ReportedIssues.Keys.Where(x => x.IssueType == issueType).ToImmutableHashSet();
@@ -82,64 +124,99 @@ internal sealed class IssueReporter
 
             var TPR = ((float)TP) / ( TP + FN );
             var FPR = ((float)FP) / ( FP + TN );
+            var TNR = ((float)TN) / ( TN + FP );
 
-            var score = (TPR - FPR) * 100;
+            var Sensitivity = TPR;
+            var Specificity = 1 - FPR;
+
+            var score = (Sensitivity + Specificity - 1) * 100;
+
+            scores[issueType] = score;
 
             writer.WriteLine("\nReporting Results for issue: " + issueType);
             writer.WriteLine("");
 
-            writer.WriteLine("Reported issues:");
-            foreach (var issue in reportedIssues)
+            if (!shortScore) 
             {
-                writer.WriteLine(issue.ToFullString());
+                writer.WriteLine("Reported issues:");
+                foreach (var issue in reportedIssues.OrderBy(x => x.ToString()))
+                {
+                    writer.WriteLine(issue.ToFullString());
+                }
+                writer.WriteLine("");
+
+                writer.WriteLine("Expected issues:");
+                foreach (var issue in expectedIssues.OrderBy(x => x.ToString()))
+                {
+                    writer.WriteLine(issue.ToFullString());
+                }
+                writer.WriteLine("");
+
+                writer.WriteLine("Expected traps:");
+                foreach (var issue in expectedTraps.OrderBy(x => x.ToString()))
+                {
+                    writer.WriteLine(issue.ToFullString());
+                }
+                writer.WriteLine("");
+
+                writer.WriteLine("False positives:");
+                foreach (var issue in falsePositives.OrderBy(x => x.ToString()))
+                {
+                    writer.WriteLine(issue.ToFullString());
+                }
+                writer.WriteLine("");
+
+                writer.WriteLine("False negatives:");
+                foreach (var issue in falseNegatives.OrderBy(x => x.ToString()))
+                {
+                    writer.WriteLine(issue.ToFullString());
+                }
+                writer.WriteLine("");
+
+                writer.WriteLine("Expected Issues Count: {0}", expectedIssues.Count);
+                writer.WriteLine("Expected Traps Count: {0}", expectedTraps.Count);
+                writer.WriteLine("Reported Issues Count: {0}", reportedIssues.Count);
+                writer.WriteLine("");
             }
-            writer.WriteLine("");
 
-            writer.WriteLine("Expected issues:");
-            foreach (var issue in expectedIssues)
-            {
-                writer.WriteLine(issue.ToFullString());
-            }
-            writer.WriteLine("");
+                writer.WriteLine("True Positives Count: {0}", TP);
+                writer.WriteLine("False Positives Count: {0}", FP);
+                writer.WriteLine("True Negatives Count: {0}", TN);
+                writer.WriteLine("False Negatives Count: {0}", FN);
+                writer.WriteLine("");
 
-            writer.WriteLine("Expected traps:");
-            foreach (var issue in expectedTraps)
-            {
-                writer.WriteLine(issue.ToFullString());
-            }
-            writer.WriteLine("");
+                writer.WriteLine("Sensitivity: {0}", Sensitivity);
+                writer.WriteLine("Specificity: {0}", Specificity);
+                writer.WriteLine("");
 
-            writer.WriteLine("False positives:");
-            foreach (var issue in falsePositives)
-            {
-                writer.WriteLine(issue.ToFullString());
-            }
-            writer.WriteLine("");
-
-            writer.WriteLine("False negatives:");
-            foreach (var issue in falseNegatives)
-            {
-                writer.WriteLine(issue.ToFullString());
-            }
-            writer.WriteLine("");
-
-            writer.WriteLine("Expected Issues Count: {0}", expectedIssues.Count);
-            writer.WriteLine("Expected Traps Count: {0}", expectedTraps.Count);
-            writer.WriteLine("Reported Issues Count: {0}", reportedIssues.Count);
-            writer.WriteLine("");
-
-            writer.WriteLine("True Positives Count: {0}", TP);
-            writer.WriteLine("False Positives Count: {0}", FP);
-            writer.WriteLine("True Negatives Count: {0}", TN);
-            writer.WriteLine("False Negatives Count: {0}", FN);
-            writer.WriteLine("");
-
-            writer.WriteLine("True Positive Rate: {0}", TPR);
-            writer.WriteLine("False Positive Rate: {0}", FPR);
-            writer.WriteLine("");
-
-            writer.WriteLine("Final Score: {0}", score);
+                writer.WriteLine("Score for issue {0}: {1}", issueType, score);
         }
+        writer.WriteLine("");
+        writer.WriteLine("");
+
+        writer.WriteLine("Preliminary results! Warning: This score may vary after review of your code.");
+        writer.WriteLine("If an error is found in the issues/traps in the benchmark, we will correct the score for everyone.");
+        writer.WriteLine("Don't cheat and don't use external libraries doing the analysis for you!");
+        writer.WriteLine("Negative score for a kind of issue won't be accounted for.");
+        writer.WriteLine("");
+
+        var finalScore = 0.0f;
+        writer.WriteLine("Score per kind of issue:");
+        foreach (IssueType issueType in (IssueType[]) Enum.GetValues(typeof(IssueType)))
+        {
+            if (!EnabledIssueTypes[issueType]) 
+                continue;
+            writer.WriteLine("{0}: {1} (Difficulty multiplier: {2})", issueType, scores[issueType], DifficultyMultiplier[issueType]);
+            if (scores[issueType] > 0) 
+            {
+                finalScore += scores[issueType] * DifficultyMultiplier[issueType];
+            }
+        }
+        writer.WriteLine("");
+
+        finalScore /= maxScore;
+        finalScore *= 100;
+        writer.WriteLine("Total Score: {0}", finalScore);
     }
 
 }

@@ -10,14 +10,14 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
 {
     public class CatalogContextSeed
     {
-        public static async Task SeedAsync(CatalogContext catalogContext, // @issue@I02
+        public static async Task SeedAsync(CatalogContext catalogContext, // @issue@I02 // @issue@I05
             ILoggerFactory loggerFactory, int? retry = 0)
         {
             int retryForAvailability = retry.Value; // @issue@I02
             try
             {
                 // TODO: Only run this if using a real database
-                // context.Database.Migrate();
+                // context.Database.Migrate(); // @issue@I06
 
                 if (!catalogContext.CatalogBrands.Any()) // @issue@I02
                 {

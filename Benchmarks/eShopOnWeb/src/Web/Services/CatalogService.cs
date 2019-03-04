@@ -37,7 +37,7 @@ namespace Microsoft.eShopWeb.Web.Services
             _uriComposer = uriComposer; // @issue@I02
         }
 
-        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId) // @issue@I02
+        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId) // @issue@I02 // @issue@I05
         {
             _logger.LogInformation("GetCatalogItems called."); // @issue@I02
 
@@ -51,6 +51,12 @@ namespace Microsoft.eShopWeb.Web.Services
                 .Take(itemsPage)
                 .ToList();
 
+            /* 
+            var itemsOnPage = root // @issue@I06
+                .Skip(itemsPage * pageIndex) // @issue@I06
+                .Take(itemsPage) // @issue@I06
+                .ToList(); // @issue@I06
+            */
             itemsOnPage.ForEach(x => // @issue@I02
             {
                 x.PictureUri = _uriComposer.ComposePicUri(x.PictureUri);

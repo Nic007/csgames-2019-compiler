@@ -16,13 +16,13 @@ namespace Compiler
         internal static (string filepath, int lineNumber) ExtractPosition(SyntaxNode node)
         {
             return (filepath: node.SyntaxTree.FilePath, 
-                lineNumber: node.SyntaxTree.GetLineSpan(node.Span).StartLinePosition.Line);
+                lineNumber: node.SyntaxTree.GetLineSpan(node.Span).StartLinePosition.Line + 1);
         }
 
         internal static (string filepath, int lineNumber) ExtractPosition(SyntaxTrivia trivia)
         {
             return (filepath: trivia.SyntaxTree.FilePath, 
-                lineNumber: trivia.SyntaxTree.GetLineSpan(trivia.Span).StartLinePosition.Line);
+                lineNumber: trivia.SyntaxTree.GetLineSpan(trivia.Span).StartLinePosition.Line + 1);
         }
 
         internal static void AnalyzeWalker(Project project, DefaultWalker walker)

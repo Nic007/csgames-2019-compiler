@@ -11,8 +11,7 @@ namespace Compiler.IssueWalkers
 {
     // This is the skeleton of what a walker might look like
     internal class DummyWalker : DefaultWalker
-    {       
-
+    {
         // This is you want to override a node for the AST, go look at the Documentation
         // folder to see which methods you can overrride
         public override void VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
@@ -25,11 +24,18 @@ namespace Compiler.IssueWalkers
 
             base.VisitCaseSwitchLabel(node);
         }
-        internal virtual void PreExecute() {
+        internal override void PreExecute() {
+            // You want to call the following line! It will tell the correction system
+            // that you want to get a a score for this kind of issue. Without it 
+            // you won't be evaluated!
+            // IssueReporter.Instance.EnableIssueType(IssueType.TheIssueYouCareAbout);
+
+
             // If you need to execute more code before visiting the AST
         }
 
-        internal virtual void PostExecute() {
+        internal override void PostExecute() {
+            
             // If you need to execute more code after visiting the AST 
 
             // For example you stored some nodes during the visit and now you

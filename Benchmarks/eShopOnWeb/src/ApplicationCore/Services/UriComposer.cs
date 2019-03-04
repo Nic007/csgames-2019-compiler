@@ -6,7 +6,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
     public class UriComposer : IUriComposer
     {
         private readonly CatalogSettings _catalogSettings;  // @issue@I03
-        private readonly CatalogSettings _catalogSettings2; // @trap@I03
+        private readonly CatalogSettings _catalogSettings2; // @issue@I02 // @trap@I03
 
         public UriComposer(CatalogSettings catalogSettings) => _catalogSettings = catalogSettings; // @issue@I02
 
