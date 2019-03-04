@@ -2,7 +2,7 @@
 
 ## Introduction avec le Lore
 
-Les organisateurs de la croisière veulent mettre en ligne leur toute nouvelle boutique. Ils veulent vérifier que le code est suffisamment de qualité, mais ils n'ont pas le temps de vérifier chaque ligne de code dans un audit. Ils ont donc prit la décision de vous mandater afin de développer un outil d'analyse statique qui va automatiquement reporter des problèmes dans le code source. L'outil demandé doit pouvoir analyser l'entièreté du programme avec la meilleure précision. Tentez de trouver le plus de défauts possible sans donner trop de faux positifs.
+Les organisateurs de la croisière veulent mettre en ligne leur toute nouvelle boutique en ligne. Ils veulent vérifier que le code est suffisamment de qualité, mais ils n'ont pas le temps de vérifier chaque ligne de code dans un audit. Ils ont donc prit la décision de vous mandater afin de développer un outil d'analyse statique qui va automatiquement reporter des problèmes dans le code source. L'outil demandé doit pouvoir analyser l'entièreté du programme avec la meilleure précision. Tentez de trouver le plus de défauts possible sans donner trop de faux positifs.
 
 ## Description du défi à réaliser
 
@@ -15,7 +15,7 @@ Votre objectif est d'implémenter une série d'analyses qui vont détecter des p
 - I05 : Une fonction ne devrait pas faire plus de 30 lignes (Ignorez les lignes vides ou les lignes contenant seulement un commentaire). La longueur est mesurée de la première ligne de déclaration (protected void blabla()) jusqu'à la fin du block "}" inclusivement.
 - I06 : Le code ne devrait pas être commenté
 
-Le pointage pour chacun de ces problèmes sera calculé en fonction du nombre de vrais positifs, de faux positifs, de faux négatifs et de vrais négatifs. Il est possible qu'une analyse trop impossible se retrouve avec un score négatif, dans ce cas nous utiliserons un score de 0 afin de ne pas vous pénaliser.
+Le pointage pour chacun de ces problèmes sera calculé en fonction du nombre de vrais positifs, de faux positifs, de faux négatifs et de vrais négatifs. Il est possible qu'une analyse trop imprécise se retrouve avec un score négatif, dans ce cas nous utiliserons un score de 0 afin de ne pas vous pénaliser.
 
 Votre pointage pour chaque problème sera multiplié par un multiplicateur de difficulté, les voici:
 - I01 : 1
@@ -35,7 +35,7 @@ Vous aurez besoin d'avoir installé dotnet core (https://dotnet.microsoft.com/do
 
 Nous vous conseillons d'utiliser Visual Studio Code (Un IDE gratuit) dans cette compétition. Le IDE n'est pas nécessaire, vous pouvez aussi à la racine du projet (là où Analyzer.sln se retrouve) tapez dans la console les commandes "dotnet restore", "dotnet build" et "dotnet run".
 
-Pour chaque problème, ajoutez une classe nommée dans le dossier "IssueWalker" qui hérite de "DefaultWalker". Copiez la classe DummyWalker.cs afin de vous faciliter la tâche. Ainsi votre analyse sera automatiquement éxécutée.
+Pour chaque problème, ajoutez une classe dans le dossier nommé "IssueWalker" qui hérite de "DefaultWalker". Copiez la classe DummyWalker.cs afin de vous faciliter la tâche. Ainsi votre analyse sera automatiquement éxécutée.
 
 Utilisez les notions de base que vous avez appris dans vos cours de compilateur pour résoudre cette épreuve. Visitez l'Arbre de Syntaxe Abstrait (AST) et déterminez là où il y a des défauts. Une fois le défaut trouvé, vous n'avez qu'à reporter ce défaut à l'instance singleton du "IssueReporter".
 
@@ -52,7 +52,5 @@ ATTENTION: Si vous avez effectué des modifications en dehors du dossier IssueWa
 * La ficher CFGWalker dans Walkers vous donnera une bonne idée de comment il est possible de parcourir le CFG.
 
 * Pour tester plus rapidement, il vous est conseillé de créer un plus petit projet à analyser. (Par example votre propre projet)
-
-* Évitez de modifier les classes en dehors du dossier IssueWalker, des modifications seront tolérées si elles sont pertinentes, mais refusées si elles tentent de manipuler le pointage.
 
 * Le compiler que l'on utilise comme base pour le projet est mieux connu sous le nom de "Roslyn"
