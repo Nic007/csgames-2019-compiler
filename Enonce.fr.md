@@ -1,4 +1,4 @@
-# Énoncé
+# Votre propre outil d'analyse statique!
 
 ## Introduction avec le Lore
 
