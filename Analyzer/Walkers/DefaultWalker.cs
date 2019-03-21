@@ -2,6 +2,7 @@
 // for you walkers
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
@@ -12,14 +13,121 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace Compiler.Walkers
 {
-    internal abstract class DefaultWalker : CSharpSyntaxWalker
+    internal class DefaultWalker : CSharpSyntaxWalker
     {
+        internal static int nbIf = 0;
+        internal static int nbCallsIO = 0;
+        internal static int sumMaxDepth = 0;
+
+        internal static HashSet<string> allEnums = new HashSet<string>();
+        internal static HashSet<string> allUsedIdentifiers = new HashSet<string>();        
         internal DefaultWalker() : base() 
         {
         }
         
         internal DefaultWalker(SyntaxWalkerDepth param) : base(param) 
         {
+        }
+
+        public override void VisitIfStatement(IfStatementSyntax node)
+        {
+            nbIf += 1;
+            base.VisitIfStatement(node);
+        }
+
+        int maxDepth(SyntaxNode node) {
+            int maxChilds = 0;
+            if (node.ChildNodes().Any())
+                maxChilds = node.ChildNodes().Select(x => maxDepth(x)).Max();
+            if (node is BlockSyntax)
+                maxChilds += 1;
+            return maxChilds;
+        }
+
+        LinkedList<BlockSyntax> maxDepth2(SyntaxNode node) {
+            LinkedList<BlockSyntax> maxChilds = new LinkedList<BlockSyntax>();
+            if (node.ChildNodes().Any()) {
+                int m = 0;
+                var ll = node.ChildNodes().Select(x => maxDepth2(x));
+                foreach (var l in ll) {
+                    if (l.Count > m) {
+                        m = l.Count;
+                        maxChilds = l;
+                    } 
+                }
+            }
+            if (node is BlockSyntax) {
+                maxChilds = new LinkedList<BlockSyntax>(maxChilds);
+                maxChilds.AddLast(node as BlockSyntax);
+            }
+            return maxChilds;
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            sumMaxDepth += maxDepth(node);
+            // Console.WriteLine(node.Identifier.ToString() + " : " + maxDepth(node).ToString());
+            // foreach (var l in maxDepth2(node)) {
+            //     Console.WriteLine(l.ToString());
+            // }
+            base.VisitMethodDeclaration(node);
+        }
+
+        public override void VisitEnumDeclaration(EnumDeclarationSyntax  node)
+        {
+            foreach(var member in node.Members) {
+                allEnums.Add(node.Identifier + "." + member.Identifier);
+            }
+            base.VisitEnumDeclaration(node);
+        }
+
+        public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax  node) {
+            string t = node.ToString();
+            if(node.ChildNodes().Where(x => x is IdentifierNameSyntax).Count() == 2 && t.Contains(".")) {
+                allUsedIdentifiers.Add(t);
+            }
+            
+            base.VisitMemberAccessExpression(node);
+        }
+
+
+        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        {
+            var child = node.ChildNodes().FirstOrDefault();
+            var text = child.ToString();
+
+            if (child is IdentifierNameSyntax 
+                || child is GenericNameSyntax 
+                || child is InvocationExpressionSyntax 
+                || child is ElementAccessExpressionSyntax 
+                || child is ParenthesizedExpressionSyntax) {
+                return;
+            }
+
+            var test2 = node?.Contains(child);
+
+            ExpressionSyntax obj = null;
+            if (child is MemberBindingExpressionSyntax) 
+            {
+                var memberAccess = (MemberBindingExpressionSyntax) child;
+                var parent = memberAccess.Ancestors().First(x => x is ConditionalAccessExpressionSyntax) as ConditionalAccessExpressionSyntax;
+                obj = parent.Expression;
+            }
+            else {
+                var memberAccess = (MemberAccessExpressionSyntax) child;
+                obj = memberAccess.Expression;
+            }
+
+
+            
+
+            var name = Program.Instance.Model.GetTypeInfo(obj).Type.Name;
+            
+            if (name.ToLower().Contains("i") || name.ToLower().Contains("o")) {
+                nbCallsIO += 1;
+            }
+
+            base.VisitInvocationExpression(node);
         }
 
         internal virtual void PreExecute() {

@@ -25,14 +25,22 @@ namespace Compiler
                 lineNumber: trivia.SyntaxTree.GetLineSpan(trivia.Span).StartLinePosition.Line + 1);
         }
 
+        internal static HashSet<string> files = new HashSet<string>();  
         internal static void AnalyzeWalker(Project project, DefaultWalker walker)
         {
             walker.PreExecute();
+
             foreach(var doc in project.Documents.Where(x => !x.FilePath.Contains("Debug")))
             {
+                if(files.Contains(doc.FilePath)) continue;
+                files.Add(doc.FilePath);
+
+                
+
                 var tree = doc.GetSyntaxTreeAsync().Result.GetRoot();
                 Program.Instance.Model = doc.GetSemanticModelAsync().Result;
                 
+                // System.Console.WriteLine(doc.FilePath);
                 walker.Visit(tree);
             }
             walker.PostExecute();

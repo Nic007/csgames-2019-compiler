@@ -32,7 +32,8 @@ namespace Compiler
         static void Main() 
         {
             // However you might want to change this filepath for your testing
-            var solutionFilePath = Directory.GetCurrentDirectory() + @"\Benchmarks\eShopOnWeb\eShopOnWeb.sln";
+            var solutionFilePath = @"D:\Developpement\csgames-2019-competitions\Compiler\Analyzer.sln";
+            //var solutionFilePath = @"D:/Developpement/EntityFrameworkCore/EFCore.sln";
             Console.WriteLine("Parsing solution... " + solutionFilePath);
             if (!File.Exists(solutionFilePath)) {
                 Console.WriteLine("File not found, the folder " + Directory.GetCurrentDirectory() 
@@ -45,22 +46,36 @@ namespace Compiler
             var projects = workspace.CurrentSolution.Projects;
 
             Console.WriteLine("Parsing source code for expected issues and traps...");
-            Helper.AnalyzeWalker(projects, new ExpectedIssueWalker());
-            IssueReporter.Instance.EndExpectMode();
+            Helper.AnalyzeWalker(projects, new DefaultWalker());
+            Console.WriteLine("nb de fichiers " + Helper.files.Count());
+            Console.WriteLine("nb de ifs " + Walkers.DefaultWalker.nbIf);
+            Console.WriteLine("nb de calls io " + Walkers.DefaultWalker.nbCallsIO);
+            Console.WriteLine("sum max depth " + Walkers.DefaultWalker.sumMaxDepth);
 
-            Console.WriteLine("Analyzing source code...");
-            var walkersNames = Assembly.GetExecutingAssembly().GetTypes()
-              .Where(t => String.Equals(t.Namespace, "Compiler.IssueWalkers", StringComparison.Ordinal));
+            var a = Walkers.DefaultWalker.allEnums;
+            var b = Walkers.DefaultWalker.allUsedIdentifiers;
 
-            var walkers = walkersNames.Select(x => Activator.CreateInstance(x)).OfType<DefaultWalker>();
-            Helper.AnalyzeWalkers(projects, walkers);
+            var uses = b.Intersect(a).ToHashSet();
+            var missing = a.Except(b).ToHashSet();
+            var notEnums = b.Except(a).ToHashSet();
+            var enumsMult = uses.Count * missing.Count * notEnums.Count;
+            Console.WriteLine("mult enums " + enumsMult);
 
-            // And reporting results
-            var sw = new StreamWriter(Console.OpenStandardOutput());
-            sw.AutoFlush = true;
-            Console.SetOut(sw);
+            // IssueReporter.Instance.EndExpectMode();
 
-            IssueReporter.Instance.Report(sw);
+            // Console.WriteLine("Analyzing source code...");
+            // var walkersNames = Assembly.GetExecutingAssembly().GetTypes()
+            //   .Where(t => String.Equals(t.Namespace, "Compiler.IssueWalkers", StringComparison.Ordinal));
+
+            // var walkers = walkersNames.Select(x => Activator.CreateInstance(x)).OfType<DefaultWalker>();
+            // Helper.AnalyzeWalkers(projects, walkers);
+
+            // // And reporting results
+            // var sw = new StreamWriter(Console.OpenStandardOutput());
+            // sw.AutoFlush = true;
+            // Console.SetOut(sw);
+
+            // IssueReporter.Instance.Report(sw);
         }
     }
 }

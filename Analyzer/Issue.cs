@@ -11,6 +11,7 @@ internal enum IssueType {
     NonStaticMethodsAndPropertiesNotAccessingInstanceData,
     FunctionTooBig,
     CommentedCode,
+    CommentedCode2,
 };
 
 internal sealed class Issue

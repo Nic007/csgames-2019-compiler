@@ -55,8 +55,33 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             }
         }
 
+        public enum StoreTypePostfix
+        {
+            /// <summary>
+            ///     Append nothing.
+            /// </summary>
+            None,
+
+            /// <summary>
+            ///     Append only the size.
+            /// </summary>
+            Size,
+
+            /// <summary>
+            ///     Append only the precision.
+            /// </summary>
+            Precision,
+
+            /// <summary>
+            ///     Append the precision and scale.
+            /// </summary>
+            PrecisionAndScale
+        }
+
         static IEnumerable<CatalogBrand> GetPreconfiguredCatalogBrands() // @issue@I02
         {
+            StoreTypePostfix test;
+            test = StoreTypePostfix.Precision;
             return new List<CatalogBrand>() // @issue@I02
             {
                 new CatalogBrand() { Brand = "Azure"},
