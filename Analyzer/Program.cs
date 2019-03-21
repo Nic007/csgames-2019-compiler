@@ -32,7 +32,7 @@ namespace Compiler
         static void Main() 
         {
             // However you might want to change this filepath for your testing
-            var solutionFilePath = Directory.GetCurrentDirectory() + @"\Benchmarks\eShopOnWeb\eShopOnWeb.sln";
+            var solutionFilePath = Directory.GetCurrentDirectory() + @"/Benchmarks/eShopOnWeb/eShopOnWeb.sln";
             Console.WriteLine("Parsing solution... " + solutionFilePath);
             if (!File.Exists(solutionFilePath)) {
                 Console.WriteLine("File not found, the folder " + Directory.GetCurrentDirectory() 
